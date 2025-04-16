@@ -28,6 +28,9 @@ local auraRole = "<@&842390958561296384>"
 
 local reported = false
 
+workspace:WaitForChild("Rendered", false)
+workspace.Rendered:WaitForChild("Rifts", false)
+
 for _, v in pairs(workspace.Rendered.Rifts:GetChildren()) do
     if v:IsA("Model") and not v:GetAttribute("AlreadyReported") then
         local d = v:FindFirstChild("Display")
