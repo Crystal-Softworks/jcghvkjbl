@@ -161,9 +161,9 @@ for _, v in pairs(workspace.Rendered.Rifts:GetChildren()) do
     end
 end
 
-plr.OnTeleport:Connect(function(State)
-    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
-end)
+-- game.Players.LocalPlayer.OnTeleport:Connect(function()
+--     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
+-- end)
 
 task.delay(10, function()
 
