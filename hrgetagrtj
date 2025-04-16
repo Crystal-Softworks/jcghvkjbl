@@ -87,6 +87,11 @@ local function teleportToNewServer()
 	    print("tp")
 		Services.Teleport:TeleportToPlaceInstance(PlaceId, sid, Player)
 	end
+    task.delay(5, function()
+    
+        game:GetService("TeleportService"):Teleport(85896571713843, game.Players.LocalPlayer)
+    
+    end)
 end
 
 repeat task.wait() until workspace:FindFirstChild("Rendered") and workspace.Rendered:FindFirstChild("Rifts")
