@@ -62,6 +62,21 @@ local function getAvailableServer()
         end
     end
 
+    if not #servers then
+
+        task.wait(10)
+
+        if body and body.data then
+            for i, v in next, body.data do
+                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= JobId then
+                    table.insert(servers, 1, v.id)
+                    print(v.id)
+                end
+            end
+        end
+
+    end
+
     return servers[math.random(1, #servers)]
 end
 
@@ -150,8 +165,7 @@ for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
 end
 
 -- Player.OnTeleport:Connect(function()
--- 	local code = string.format("game:GetService('TeleportService'):TeleportToPlaceInstance(%d, '%s', game.Players.LocalPlayer)", PlaceId, JobId)
--- 	if queue_on_teleport then queue_on_teleport(code) end
+-- 	if queue_on_teleport then queue_on_teleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()") end
 -- end)
 print(4)
 Services.Log.MessageOut:Connect(function(_, msgType)
@@ -161,5 +175,5 @@ Services.Log.MessageOut:Connect(function(_, msgType)
 end)
 print(5)
 
-task.delay(10, teleportToNewServer)
+task.delay(20, teleportToNewServer)
 print(6)
