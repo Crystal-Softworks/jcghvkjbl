@@ -160,8 +160,6 @@ for _, v in pairs(workspace.Rendered.Rifts:GetChildren()) do
     end
 end
 
-end
-
 plr.OnTeleport:Connect(function(State)
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
 end)
@@ -183,7 +181,7 @@ task.delay(10, function()
 
         if #servers > 0 then
 			
-            TeleportService:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
+            tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
         end
 
 	end
