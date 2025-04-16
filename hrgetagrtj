@@ -180,5 +180,5 @@ Services.Log.MessageOut:Connect(function(_, msgType)
 end)
 print(5)
 
-task.delay(20, teleportToNewServer)
+task.delay(7, teleportToNewServer)
 print(6)
