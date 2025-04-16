@@ -165,30 +165,6 @@ end
 --     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
 -- end)
 
-task.delay(10, function()
-
-	if request then
-        local servers = {}
-        local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pid)})
-        local body = http:JSONDecode(req.Body)
-
-        if body and body.data then
-            for i, v in next, body.data do
-                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= jid then
-                    table.insert(servers, 1, v.id)
-                end
-            end
-        end
-
-        if #servers > 0 then
-			
-            tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
-        end
-
-	end
-
-end)
-
 logservice.MessageOut:Connect(function(msg, h)
 	
 	if h == Enum.MessageType.MessageError then
@@ -212,4 +188,28 @@ logservice.MessageOut:Connect(function(msg, h)
 		
 	end
 	
+end)
+
+task.delay(10, function()
+
+	if request then
+        local servers = {}
+        local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pid)})
+        local body = http:JSONDecode(req.Body)
+
+        if body and body.data then
+            for i, v in next, body.data do
+                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= jid then
+                    table.insert(servers, 1, v.id)
+                end
+            end
+        end
+
+        if #servers > 0 then
+			
+            tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
+        end
+
+	end
+
 end)
