@@ -1,246 +1,165 @@
-wait(3)
-local logservice = game:GetService("LogService")
-local http = game:GetService("HttpService")
-local tp = game:GetService("TeleportService")
-local plr = game.Players.LocalPlayer
-local pid = game.PlaceId
-local isnewserver = false
-local jid = game.JobId
-local joinBase = "https://www.roblox.com/games/start?placeId=16302670534&launchData=85896571713843/"
-queueteleport = (syn and syn.queue_on_teleport) or queue_on_teleport or (fluxus and fluxus.queue_on_teleport)
-
-local http = game:GetService("HttpService")
-local tp = game:GetService("TeleportService")
-local plr = game.Players.LocalPlayer
-local pid = game.PlaceId
-local jid = game.JobId
-local joinBase = "https://www.roblox.com/games/start?placeId=16302670534&launchData=85896571713843/"
-
-local defaultWebhook = "https://discord.com/api/webhooks/1361848172602851539/bnNStgkOeTkXUVDRUn7ofgn4L2XR3KtHekCwahSwGbPmJ2cFppGFk1iBVJxxyFp4LVQi"
-local chestWebhook = "https://discord.com/api/webhooks/1361854734587134107/1QnjQ5BpFT0BL3PJAwWHXm8lq5EO5dvREA3QcL_8k1A1T74DOT3auaXdB_HTJHBbFJnk"
-local eggWebhook = "https://discord.com/api/webhooks/1361855381990805696/rMfzBCqgD9lNHF630jYdPBA85kYZTPQ-MX4pPqXnmMMnYSnHxOkGoaDuyx2zqFXOg9I1"
-local rainbowWebhook = "https://discord.com/api/webhooks/1361870439064015078/Fg3GYavkzIiJVJ1JZ-qOZhW0OC0JPE8pLAP6ctRXtazFDrdc1YH_AggBQJizZ7VUWJv0"
-local spikeyWebhook = "https://discord.com/api/webhooks/1361880192200609924/1d-tYNS7hatKyJmQhL2OndKyzC2yUAuRGaLqT-fTU3BI5ZIdJWsCL3wffYz3QHx6pgu1"
-local lunarWebhook = "https://discord.com/api/webhooks/1361881805313282098/u5Et6DCmz3ftOChdspLGoIjYlLxq-9Mpcm0Vgy_THmJvJvdwFc-cDJGoS1YJAtiTDdgt"
-local voidWebhook = "https://discord.com/api/webhooks/1361883088048623878/b_Vwts32vNQQSl-qe6DUIqguHhixPR8iXAvc1JboeqYfvCXe2qyhvv8d1eZIXm_tjUzU"
-local unknownWebhook = "https://discord.com/api/webhooks/1361884618281717900/jVLDUZxvjqb1sTKMt-oSyFgqcwudQW7J5s_bQW7ZBmZr4wOCmCAuCTYb17UWtcTcxK7z"
-
-local auraRole = "<@&842390958561296384>"
-
-local reported = false
-
-workspace:WaitForChild("Rendered", false)
-workspace.Rendered:WaitForChild("Rifts", false)
-
-repeat wait()
-	
-until workspace:FindFirstChild("Rendered")
-
-repeat wait()
-	
-until workspace:FindFirstChild("Rendered"):FindFirstChild("Rifts")
-
-for _, v in pairs(workspace.Rendered.Rifts:GetChildren()) do
-    if v:IsA("Model") and not v:GetAttribute("AlreadyReported") then
-        local d = v:FindFirstChild("Display")
-        if d and d:IsA("BasePart") then
-            local s = d:FindFirstChild("SurfaceGui")
-            local i = s and s:FindFirstChild("Icon")
-            local l = i and i:FindFirstChild("Luck")
-            local tm = s and s:FindFirstChild("Timer")
-            local timer = tm and tm:IsA("TextLabel") and tm.Text or nil
-            local y = tostring(math.floor(d.Position.Y)) .. "m"
-            local n = v.Name
-            local t = l and l:IsA("TextLabel") and l.Text or nil
-            local slots = tostring(#game.Players:GetPlayers()).." / 12"
-            local now = "<t:"..tostring(os.time())..":f>"
-            local joinLink = "[Join Server]("..joinBase..jid..")"
-
-            local webhook = defaultWebhook
-            local embedColor = nil
-            local useEmbed = false
-            local customTitle = n
-            local nameLower = string.lower(n)
-
-            if string.find(nameLower, "aura") then
-                request({
-                    Url = defaultWebhook,
-                    Method = "POST",
-                    Headers = { ["Content-Type"] = "application/json" },
-                    Body = http:JSONEncode({
-                        content = auraRole,
-                        embeds = {{
-                            title = "!!!!!!!!!! AURA ISLAND HAS APPEARED",
-                            color = 10181046
-                        }}
-                    })
-                })
-            end
-
-            if nameLower == "golden-chest" then
-                webhook = chestWebhook
-                embedColor = 16776960
-                useEmbed = true
-                customTitle = "Golden Chest <:GoldenChest:1361858437385814136>"
-            elseif nameLower == "nightmare-egg" then
-                webhook = eggWebhook
-                embedColor = 16711680
-                useEmbed = true
-                customTitle = "Nightmare Egg <:NightmareEgg:1361856781084528830>"
-            elseif nameLower == "rainbow-egg" then
-                webhook = rainbowWebhook
-                embedColor = 16761035
-                useEmbed = true
-                customTitle = "Rainbow Egg <:RainbowEgg:1361869298934616296>"
-            elseif nameLower == "spikey-egg" then
-                webhook = spikeyWebhook
-                embedColor = 8355711
-                useEmbed = true
-                customTitle = "Spikey Egg <:SpikeyEgg:1361869489259544816>"
-            elseif nameLower == "lunar-egg" then
-                webhook = lunarWebhook
-                embedColor = 3447003
-                useEmbed = true
-                customTitle = "Lunar Egg <:LunarEgg:1361881882563973270>"
-            elseif nameLower == "void-egg" then
-                webhook = voidWebhook
-                embedColor = 2899536
-                useEmbed = true
-                customTitle = "Void Egg <:VoidEgg:1361883312515448962>"
-            elseif nameLower == "royal-chest" then
-                webhook = defaultWebhook
-                embedColor = 16744716
-                useEmbed = true
-                customTitle = "Royal Chest <:RoyalChest:1361884102416138261>"
-            elseif string.find(nameLower, "chest") then
-                webhook = chestWebhook
-            elseif not (
-                nameLower == "golden-chest" or
-                nameLower == "nightmare-egg" or
-                nameLower == "rainbow-egg" or
-                nameLower == "spikey-egg" or
-                nameLower == "lunar-egg" or
-                nameLower == "void-egg" or
-                nameLower == "royal-chest" or
-                string.find(nameLower, "chest") or
-                string.find(nameLower, "aura")
-            ) then
-                webhook = unknownWebhook
-            end
-
-            if useEmbed then
-                local fields = {}
-                if t then table.insert(fields, { name = "Luck", value = "`"..t.."`", inline = true }) end
-                table.insert(fields, { name = "Height", value = "`"..y.."`", inline = true })
-                table.insert(fields, { name = "Server Slots", value = "`"..slots.."`", inline = true })
-                if timer then table.insert(fields, { name = "Timer", value = "`"..timer.."`", inline = true }) end
-                table.insert(fields, { name = "Teleport Script", value = "```lua\ngame:GetService(\"TeleportService\"):TeleportToPlaceInstance(\""..pid.."\", \""..jid.."\", game.Players.LocalPlayer)\n```" })
-                table.insert(fields, { name = string.char(226,128,139), value = joinLink })
-                table.insert(fields, { name = "Server ID", value = "`"..jid.."`" })
-                table.insert(fields, { name = "Checked At", value = now })
-
-                request({
-                    Url = webhook,
-                    Method = "POST",
-                    Headers = { ["Content-Type"] = "application/json" },
-                    Body = http:JSONEncode({
-                        embeds = {{
-                            title = customTitle,
-                            color = embedColor,
-                            fields = fields
-                        }}
-                    })
-                })
-            else
-                local msg = "**"..n.."**\n"
-                if t then msg = msg.."`"..t.."`\n" end
-                msg = msg.."`"..y.."`\n"
-                msg = msg.."`"..slots.."`\n"
-                if timer then msg = msg.."`"..timer.."`\n" end
-                msg = msg.."\nTeleport Script:\n```lua\ngame:GetService(\"TeleportService\"):TeleportToPlaceInstance(\""..pid.."\", \""..jid.."\", game.Players.LocalPlayer)\n```\n"..joinLink.."\nServer ID:\n`"..jid.."`\nChecked At:\n"..now
-
-                request({
-                    Url = webhook,
-                    Method = "POST",
-                    Headers = { ["Content-Type"] = "application/json" },
-                    Body = http:JSONEncode({ content = msg })
-                })
-            end
-
-            v:SetAttribute("AlreadyReported", true)
-            reported = true
-        end
-    end
-end
-
--- game.Players.LocalPlayer.OnTeleport:Connect(function()
---     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/Crystal-Softworks/jcghvkjbl/refs/heads/main/hrgetagrtj'))()")
--- end)
-
-logservice.MessageOut:Connect(function(msg, h)
-	
-	if h == Enum.MessageType.MessageError then
-		
-		local servers = {}
-		local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pid)})
-		local body = http:JSONDecode(req.Body)
-
-		if body and body.data then
-			for i, v in next, body.data do
-				if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= jid then
-					table.insert(servers, 1, v.id)
-				end
-			end
-		end
-
-		if #servers > 0 then
-
-			tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
-		end
-		
-	end
-	
-end)
+print(1)
 
 task.wait(3)
 
-local servers = {}
-local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pid)})
-local body = http:JSONDecode(req.Body)
+local Services = {
+	Log = game:GetService("LogService"),
+	Http = game:GetService("HttpService"),
+	Teleport = game:GetService("TeleportService"),
+	Players = game:GetService("Players"),
+}
 
-if body and body.data then
-    for i, v in next, body.data do
-        if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= jid then
-            table.insert(servers, 1, v.id)
-        end
-    end
+local Player = Services.Players.LocalPlayer
+local PlaceId = game.PlaceId
+local JobId = game.JobId
+local JoinURL = "https://www.roblox.com/games/start?placeId=16302670534&launchData=85896571713843/" .. JobId
+
+local Webhooks = {
+	Default = "https://discord.com/api/webhooks/1361926749356691547/YiGiPFdq_k9fEEVptt0PIciJPLqGjD8_UUXsqFhIR7zfZrcCRvlp1QbuIytNE-5LOJSW",
+	Chest = "https://discord.com/api/webhooks/1361926856441466950/EFKBeRwMwtDm5Y5Fm7Zgfrh-kFAX3IracPET8aBijwInfOxnGAbhbZtDkokVbGEW4C_u",
+	Egg = {
+		Nightmare = "https://discord.com/api/webhooks/1361926954646765660/draAau64eRUoiT_16qvhIzPls5_u-U_bA_Z4frf9fVToGARjhe_faxuAHUlF2O7hDlsw",
+		Rainbow = "https://discord.com/api/webhooks/1361926494779343069/MG6gU1bxiO0adDU36dhg05E7a6cr8Un1K9ihlDJ_oQKVPq7JOGvWe78AyGJ3yUjQsWC9",
+		Spikey = "https://discord.com/api/webhooks/1361927126500118528/qiJVKrxTBdhJV1jret38z7Gxr5gAYFwPdZNC9mSI-1uv2q2l0EGzWpnZGCA0OdQbNEXd",
+		Lunar = "https://discord.com/api/webhooks/1361927284298223617/UJMPnPGnvyYX1qScyqi9GmekO7EPGIee5ozdD8_xRjGb74iegpjHSODyjdp2buyOMyzc",
+		Void = "https://discord.com/api/webhooks/1361927286320005181/QiLVY_4A4OMRRNKmQB4__2PxXhok37xgObmci79Xktt1hJyTA7YNF4OrhBNs4l85VIyp",
+	},
+	Unknown = "https://discord.com/api/webhooks/1361927608593416243/4FSfb9hkfk1zF8m9sH9LGroFGZ0o3fJgsqVEzg8rptRwLuMoQLw8iMapFBjOqoeSjsFi",
+	Luck25 = "https://discord.com/api/webhooks/1361938851727409305/xHcD8GPHUbQ8YtMW6fzkCi3M8QDAVcs-_LU10DOaKi8dl81A75_b8p_UBiU-fJY0zfAq",
+	Aura = "https://discord.com/api/webhooks/1361929702272401508/SpiV0Oj4fbDj2U4qU8T0fI7d6NxdTYXrtt6svyb4mT3Un9p8bGK9I5GIpfTjw0YaRh2V"
+}
+
+local PingRole = "<@&1361933113764089866>"
+
+local function sendWebhook(url, data)
+	pcall(function()
+		request({
+			Url = url,
+			Method = "POST",
+			Headers = { ["Content-Type"] = "application/json" },
+			Body = Services.Http:JSONEncode(data)
+		})
+	end)
 end
 
-if #servers > 0 then
-			
-    tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
-end
+local function getAvailableServer()
+	local servers = {}
+    local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", PlaceId)})
+    local body = Services.Http:JSONDecode(req.Body)
 
-task.delay(10, function()
+    -- for i,v in next, body.data do
+    --     for i,v in next, v do
+    --         print(i,v)
+    --     end
+    -- end
 
-	if request then
-        local servers = {}
-        local req = request({Url = string.format("https://games.roblox.com/v1/games/%d/servers/Public?sortOrder=Desc&limit=100&excludeFullGames=true", pid)})
-        local body = http:JSONDecode(req.Body)
-
-        if body and body.data then
-            for i, v in next, body.data do
-                if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= jid then
-                    table.insert(servers, 1, v.id)
-                end
+    if body and body.data then
+        for i, v in next, body.data do
+            if type(v) == "table" and tonumber(v.playing) and tonumber(v.maxPlayers) and v.playing < v.maxPlayers and v.id ~= JobId then
+                table.insert(servers, 1, v.id)
+                print(v.id)
             end
         end
+    end
 
-        if #servers > 0 then
-			
-            tp:TeleportToPlaceInstance(pid, servers[math.random(1, #servers)], plr)
-        end
+    return servers[math.random(1, #servers)]
+end
 
+local function teleportToNewServer()
+    print("new tp")
+	local sid = getAvailableServer()
+	if sid then
+	    print("tp")
+		Services.Teleport:TeleportToPlaceInstance(PlaceId, sid, Player)
+	end
+end
+
+repeat task.wait() until workspace:FindFirstChild("Rendered") and workspace.Rendered:FindFirstChild("Rifts")
+print(2)
+for _, rift in ipairs(workspace.Rendered.Rifts:GetChildren()) do
+	if rift:IsA("Model") and not rift:GetAttribute("AlreadyReported") then
+	    print("isAlreadyReported")
+		local display = rift:FindFirstChild("Display")
+		local gui = display and display:FindFirstChild("SurfaceGui")
+		local icon = gui and gui:FindFirstChild("Icon")
+		local luckLabel = icon and icon:FindFirstChild("Luck")
+		local timerLabel = gui and gui:FindFirstChild("Timer")
+
+		local name = rift.Name
+		local lower = string.lower(name)
+		local luck = luckLabel and luckLabel:IsA("TextLabel") and luckLabel.Text
+		local timer = timerLabel and timerLabel:IsA("TextLabel") and timerLabel.Text
+		local height = tostring(math.floor(display.Position.Y)) .. "m"
+		local slots = #Services.Players:GetPlayers() .. " / 12"
+		local join = "[Join Server](" .. JoinURL .. ")"
+		local now = "<t:" .. tostring(os.time()) .. ":f>"
+
+		local webhook, color, title, ping = Webhooks.Default, nil, name, false
+
+		if string.find(lower, "aura") then
+			sendWebhook(Webhooks.Aura, { embeds = {{ title = "!!!!!!!!!! AURA ISLAND HAS APPEARED", color = 10181046 }} })
+		elseif lower == "golden-chest" then
+			webhook, color, title = Webhooks.Chest, 16776960, "Golden Chest <:GoldenChest:1361925495305801778>"
+		elseif lower == "nightmare-egg" then
+			webhook, color, title = Webhooks.Egg.Nightmare, 16711680, "Nightmare Egg <:NightmareEgg:1361924756755976254>"
+		elseif lower == "rainbow-egg" then
+			webhook, color, title = Webhooks.Egg.Rainbow, 16761035, "Rainbow Egg <:RainbowEgg:1361925537886376006>"
+		elseif lower == "spikey-egg" then
+			webhook, color, title = Webhooks.Egg.Spikey, 8355711, "Spikey Egg <:SpikeyEgg:1361925568916099113>"
+		elseif lower == "lunar-egg" then
+			webhook, color, title = Webhooks.Egg.Lunar, 3447003, "Lunar Egg <:LunarEgg:1361925601572946151>"
+		elseif lower == "void-egg" then
+			webhook, color, title = Webhooks.Egg.Void, 2899536, "Void Egg <:VoidEgg:1361883312515448962>"
+		elseif lower == "royal-chest" then
+			color, title, ping = 16744716, "Royal Chest <:RoyalChest:1361925818590298143>", true
+		elseif string.find(lower, "chest") then
+			webhook = Webhooks.Chest
+		else
+			webhook = Webhooks.Unknown
+		end
+
+		if color then
+			local fields = {
+				luck and { name = "Luck", value = "`" .. luck .. "`", inline = true } or nil,
+				{ name = "Height", value = "`" .. height .. "`", inline = true },
+				{ name = "Server Slots", value = "`" .. slots .. "`", inline = true },
+				timer and { name = "Timer", value = "`" .. timer .. "`", inline = true } or nil,
+				{ name = "Teleport Script", value = "```lua\ngame:GetService(\"TeleportService\"):TeleportToPlaceInstance(\"" .. PlaceId .. "\", \"" .. JobId .. "\", game.Players.LocalPlayer)\n```" },
+				{ name = string.char(226,128,139), value = join },
+				{ name = "Server ID", value = "`" .. JobId .. "`" },
+				{ name = "Checked At", value = now }
+			}
+
+			sendWebhook(webhook, {
+				content = ping and PingRole or nil,
+				embeds = {{ title = title, color = color, fields = fields }}
+			})
+
+			if luck and string.find(luck, "x25") then
+				sendWebhook(Webhooks.Luck25, {
+					content = ping and PingRole or nil,
+					embeds = {{ title = title, color = color, fields = fields }}
+				})
+			end
+		end
+
+		rift:SetAttribute("AlreadyReported", true)
 	end
 
+	print(3)
+end
+
+-- Player.OnTeleport:Connect(function()
+-- 	local code = string.format("game:GetService('TeleportService'):TeleportToPlaceInstance(%d, '%s', game.Players.LocalPlayer)", PlaceId, JobId)
+-- 	if queue_on_teleport then queue_on_teleport(code) end
+-- end)
+print(4)
+Services.Log.MessageOut:Connect(function(_, msgType)
+	if msgType == Enum.MessageType.MessageError then
+		teleportToNewServer()
+	end
 end)
+print(5)
+
+task.delay(10, teleportToNewServer)
+print(6)
