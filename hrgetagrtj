@@ -1,3 +1,4 @@
+wait(1)
 local logservice = game:GetService("LogService")
 local http = game:GetService("HttpService")
 local tp = game:GetService("TeleportService")
@@ -30,6 +31,14 @@ local reported = false
 
 workspace:WaitForChild("Rendered", false)
 workspace.Rendered:WaitForChild("Rifts", false)
+
+repeat wait()
+	
+until workspace:FindFirstChild("Rendered")
+
+repeat wait()
+	
+until workspace:FindFirstChild("Rendered"):FindFirstChild("Rifts")
 
 for _, v in pairs(workspace.Rendered.Rifts:GetChildren()) do
     if v:IsA("Model") and not v:GetAttribute("AlreadyReported") then
